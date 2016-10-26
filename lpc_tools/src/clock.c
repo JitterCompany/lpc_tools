@@ -1,12 +1,14 @@
 #include "clock.h"
+#include "chip.h"
+#include <mcu_timing/delay.h>
 
 #define clk_freq_pll_mid_level  100000000
 
-void clock_set_frequency(uint32_t freq)
+void clock_set_frequency(unsigned int freq)
 {
     /* Switch main system clocking to IRC */
     Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_IRC, true, false);
-    delay_loop_us(clk_freq_irc, 250);
+    delay_loop_us(12000000, 250);
     /* Switch main system clocking to crystal */
     Chip_Clock_EnableCrystal();
 

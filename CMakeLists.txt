@@ -41,6 +41,9 @@ endif()
 #                   For example '43xx_m4' or '43xx_m0'.
 include(cmake/chip_libraries.cmake)
 
+CPM_AddModule("mcu_timing"
+        SOURCE_DIR "../mcu_timing")
+
 CPM_InitModule(${CPM_MODULE_NAME})
 
 #-----------------------------------------------------------------------

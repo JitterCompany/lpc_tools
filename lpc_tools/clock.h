@@ -7,6 +7,6 @@
  * freq: int
  *      desired frequency, max is 204 MHz
  */
-void clock_set_frequency(uint32_t freq);
+void clock_set_frequency(unsigned int freq);
 
 #endif
