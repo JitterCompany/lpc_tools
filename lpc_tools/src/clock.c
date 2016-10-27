@@ -23,10 +23,10 @@ void clock_set_frequency(unsigned int freq)
     Chip_Clock_SetupMainPLLHz(CLKIN_CRYSTAL, OscRateIn, clk_freq_pll_mid_level,
                               clk_freq_pll_mid_level);
     Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_MAINPLL, true, false);
-    delay_loop_us(clk_freq_pll_mid_level, 50);
+    _delay_loop_us(clk_freq_pll_mid_level, 50);
     /* Setup PLL for maximum clock */
     Chip_Clock_SetupMainPLLHz(CLKIN_CRYSTAL, OscRateIn, freq, MAX_CLOCK_FREQ);
-    delay_loop_us(freq, 50);
+    _delay_loop_us(freq, 50);
 
     SystemCoreClockUpdate();
 }
