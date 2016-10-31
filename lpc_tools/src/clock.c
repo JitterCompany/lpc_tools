@@ -73,6 +73,9 @@ static unsigned int set_clock_pll(unsigned int target_freq)
 
 void clock_set_frequency(unsigned int freq)
 {
+    // set worst case flash acceleration timing
+    Chip_CREG_SetFlashAcceleration(MAX_CLOCK_FREQ);
+
     // Switch main system clocking to IRC
     Chip_Clock_SetBaseClock(CLK_BASE_MX, CLKIN_IRC, true, false);
     _delay_loop_us(OscRateIn, 250);
@@ -88,6 +91,9 @@ void clock_set_frequency(unsigned int freq)
     // Setup PLL for maximum clock
     unsigned int result_freq = set_clock_pll(freq);
     _delay_loop_us(result_freq, 50);
+
+    // set fastest allowable flash acceleration timing
+    Chip_CREG_SetFlashAcceleration(result_freq);
 
     SystemCoreClock = result_freq;
 }
