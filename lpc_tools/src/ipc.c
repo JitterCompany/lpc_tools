@@ -1,3 +1,4 @@
+#include "ipc.h"
 #include "chip.h"
 
 void ipc_alert_remote_processor()
@@ -8,6 +9,12 @@ void ipc_alert_remote_processor()
 
     // trigger the remote processor
     __SEV();
+}
+
+void ipc_commit_and_alert(Ringbuffer *ringbuffer)
+{
+    ringbuffer_commit(ringbuffer);
+    ipc_alert_remote_processor();
 }
 
 #ifdef CORE_M4
