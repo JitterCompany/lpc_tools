@@ -1,6 +1,7 @@
 #include "ipc.h"
 #include "chip.h"
 
+#if defined(MCU_PLATFORM_43xx_m0) || defined(MCU_PLATFORM_43xx_m4)
 void ipc_alert_remote_processor()
 {
     // make sure all data transactions complete
@@ -52,3 +53,5 @@ void enable_M4_interrupt()
     NVIC_EnableIRQ((IRQn_Type)M4_IRQn);
 }
 #endif
+#endif
+

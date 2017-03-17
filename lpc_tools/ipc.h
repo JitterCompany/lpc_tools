@@ -4,6 +4,7 @@
 #include <c_utils/ringbuffer.h>
 
 
+#if defined(MCU_PLATFORM_43xx_m0) || defined(MCU_PLATFORM_43xx_m4)
 /**
  * Send interrupt to other cpu
  */
@@ -45,5 +46,6 @@ void enable_M4_interrupt();
 
 
 #endif
-
 #endif
+#endif
+

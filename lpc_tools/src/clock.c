@@ -13,6 +13,7 @@ static void _delay_loop_us(uint32_t clk_freq, uint32_t us)
     while (i++ < wait);
 }
 
+#if defined(MCU_PLATFORM_43xx_m0) || defined(MCU_PLATFORM_43xx_m4)
 static void PLL1_configure(unsigned int nsel, unsigned int msel,
         unsigned int psel, unsigned int direct)
 {
@@ -97,4 +98,5 @@ void clock_set_frequency(unsigned int freq)
 
     SystemCoreClock = result_freq;
 }
+#endif
 
