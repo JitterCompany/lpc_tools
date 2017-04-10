@@ -44,21 +44,21 @@ static void board_setup_GPIO(void)
         GPIO IO = g_config->GPIO_configs[i].IO;
 
         switch(g_config->GPIO_configs[i].dir) {
-            case GPIO_DIR_OUTPUT_LOW: {
+            case GPIO_CFG_DIR_OUTPUT_LOW: {
                 Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT,
                                           IO.port, IO.pin);
                 Chip_GPIO_SetPinState(LPC_GPIO_PORT,
                                       IO.port, IO.pin, false);
                 break;
             }
-            case GPIO_DIR_OUTPUT_HIGH: {
+            case GPIO_CFG_DIR_OUTPUT_HIGH: {
                 Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT,
                                           IO.port, IO.pin);
                 Chip_GPIO_SetPinState(LPC_GPIO_PORT,
                                       IO.port, IO.pin, true);
                 break;
             }
-            case GPIO_DIR_INPUT:
+            case GPIO_CFG_DIR_INPUT:
             default: {
                 Chip_GPIO_SetPinDIRInput(LPC_GPIO_PORT,
                                          IO.port, IO.pin);

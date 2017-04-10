@@ -1,19 +1,19 @@
 #ifndef BOARDCONFIG_H
 #define BOARDCONFIG_H
 
-#include "GPIO.h"
+#include "GPIO_HAL_LPC.h"
 #include "chip.h"
 #include <stddef.h>
 
-enum GPIO_direction {
-    GPIO_DIR_INPUT,
-    GPIO_DIR_OUTPUT_HIGH,
-    GPIO_DIR_OUTPUT_LOW
+enum GPIODirectionConfig {
+    GPIO_CFG_DIR_INPUT,
+    GPIO_CFG_DIR_OUTPUT_HIGH,
+    GPIO_CFG_DIR_OUTPUT_LOW
 };
 
 typedef struct {
     GPIO IO;
-    enum GPIO_direction dir;
+    enum GPIODirectionConfig dir;
 } GPIOConfig;
 
 typedef struct {
