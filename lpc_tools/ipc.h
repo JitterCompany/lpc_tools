@@ -34,6 +34,11 @@ void M0_boot(unsigned int m0_image_addr);
  */
 void enable_M0_interrupt();
 
+/**
+ * Disable interrupt from M0 core
+ */
+void disable_M0_interrupt();
+
 
 #endif
 #ifdef CORE_M0
@@ -43,6 +48,11 @@ void enable_M0_interrupt();
  * Enable interrupt from M4 core
  */
 void enable_M4_interrupt();
+
+/**
+ * Disable interrupt from M4 core
+ */
+void disable_M4_interrupt();
 
 
 #endif

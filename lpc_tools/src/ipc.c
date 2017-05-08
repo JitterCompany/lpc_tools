@@ -42,6 +42,13 @@ void enable_M0_interrupt()
     NVIC_ClearPendingIRQ((IRQn_Type)M0APP_IRQn);
     NVIC_EnableIRQ((IRQn_Type)M0APP_IRQn);
 }
+
+void disable_M0_interrupt()
+{
+    NVIC_DisableIRQ((IRQn_Type)M0APP_IRQn);
+    LPC_CREG->M0APPTXEVENT = 0;
+    NVIC_ClearPendingIRQ((IRQn_Type)M0APP_IRQn);
+}
 #endif
 
 #ifdef CORE_M0
@@ -51,6 +58,13 @@ void enable_M4_interrupt()
     LPC_CREG->M4TXEVENT = 0;
     NVIC_ClearPendingIRQ((IRQn_Type)M4_IRQn);
     NVIC_EnableIRQ((IRQn_Type)M4_IRQn);
+}
+
+void disable_M4_interrupt()
+{
+    NVIC_DisableIRQ((IRQn_Type)M4_IRQn);
+    LPC_CREG->M4TXEVENT = 0;
+    NVIC_ClearPendingIRQ((IRQn_Type)M4_IRQn);
 }
 #endif
 #endif
