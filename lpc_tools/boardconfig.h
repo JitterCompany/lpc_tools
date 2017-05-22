@@ -47,5 +47,16 @@ void board_setup_pins(void);
 
 const GPIO *board_get_GPIO(unsigned int ID);
 
+/**
+ * Backup / restore nvic settings to / from a buffer
+ */
+bool board_NVIC_backup(uint32_t *buffer, const size_t sizeof_buffer);
+bool board_NVIC_restore(const uint32_t *buffer, const size_t sizeof_buffer);
+
+/**
+ * Disable all interrupts with priority >= priority_threshold
+ */
+void board_NVIC_disable(const uint32_t priority_threshold);
+
 #endif
 

@@ -1,5 +1,6 @@
 #include "boardconfig.h"
 #include <stddef.h>
+#include "irq.h"
 
 const BoardConfig *g_config = 0;
 
@@ -18,6 +19,48 @@ void board_setup_NVIC(void)
         NVICConfig cfg = g_config->nvic_configs[i];
         NVIC_SetPriority(cfg.irq, cfg.priority);
     }
+}
+
+bool board_NVIC_backup(uint32_t *buffer, const size_t sizeof_buffer)
+{
+    if(sizeof_buffer < sizeof(NVIC->ISER)) {
+        return false;
+    }
+
+    const bool irq_state = irq_disable();
+    const size_t len = (sizeof(NVIC->ISER)/sizeof(NVIC->ISER[0]));
+    for(size_t i=0;i<len;i++) {
+        buffer[i] = NVIC->ISER[i];
+    }
+    irq_restore(irq_state);
+    return true;
+}
+
+bool board_NVIC_restore(const uint32_t *buffer, const size_t sizeof_buffer)
+{
+    if(sizeof_buffer < sizeof(NVIC->ISER)) {
+        return false;
+    }
+
+    const bool irq_state = irq_disable();
+    const size_t len = (sizeof(NVIC->ISER)/sizeof(NVIC->ISER[0]));
+    for(size_t i=0;i<len;i++) {
+        NVIC->ISER[i] = buffer[i];
+    }
+    irq_restore(irq_state);
+    return true;
+}
+
+void board_NVIC_disable(const uint32_t priority_threshold)
+{
+    const bool irq_state = irq_disable();
+    for(size_t i=0; i<g_config->nvic_count; i++) {
+        NVICConfig cfg = g_config->nvic_configs[i];
+        if(cfg.priority >= priority_threshold) {
+            NVIC_DisableIRQ(cfg.irq);
+        }
+    }
+    irq_restore(irq_state);
 }
 
 const GPIO *board_get_GPIO(unsigned int ID)
