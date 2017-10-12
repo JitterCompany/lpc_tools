@@ -8,7 +8,8 @@
 enum GPIODirectionConfig {
     GPIO_CFG_DIR_INPUT,
     GPIO_CFG_DIR_OUTPUT_HIGH,
-    GPIO_CFG_DIR_OUTPUT_LOW
+    GPIO_CFG_DIR_OUTPUT_LOW,
+    GPIO_CFG_DIR_INVALID
 };
 
 typedef struct {
@@ -16,12 +17,26 @@ typedef struct {
     enum GPIODirectionConfig dir;
 } GPIOConfig;
 
+enum GPIO_ID;
+
+enum ADCConfig {
+    ADC_CFG_CH0     = ADC_CH0,
+    ADC_CFG_CH1     = ADC_CH1,
+    ADC_CFG_CH2     = ADC_CH2,
+    ADC_CFG_CH3     = ADC_CH3,
+    ADC_CFG_CH4     = ADC_CH4,
+    ADC_CFG_CH5     = ADC_CH5,
+    ADC_CFG_CH6     = ADC_CH6,
+    ADC_CFG_CH7     = ADC_CH7,
+
+    ADC_CFG_INVALID
+};
+
 typedef struct {
     IRQn_Type irq;
     uint32_t priority;
 } NVICConfig;
 
-enum GPIO_ID;
 
 
 typedef struct {
@@ -34,6 +49,9 @@ typedef struct {
     const GPIOConfig *GPIO_configs;
     const size_t GPIO_count;
 
+    const enum ADCConfig *ADC_configs;
+    const size_t ADC_count;
+
 } BoardConfig;
 
 /**
@@ -45,7 +63,42 @@ void board_set_config(const BoardConfig *config);
 void board_setup_NVIC(void);
 void board_setup_pins(void);
 
+/**
+ * Get the GPIO according to the given ID.
+ *
+ * NOTE: depending on the project, the BoardConfig may contain GPIOs that are
+ * configured as GPIO_CFG_DIR_INVALID (or no config may be set at all (yet))!
+ * If this is the case, @see board_has_GPIO() to handle this correctly!
+ */
 const GPIO *board_get_GPIO(unsigned int ID);
+
+/**
+ * Test if the board has a valid GPIO for the specified GPIO ID
+ *
+ * Depending on the project, the BoardConfig may contain GPIOs that are
+ * configured as GPIO_CFG_DIR_INVALID (or no config may be set at all (yet)).
+ * 
+ * @return      True if the GPIO ID is valid: board_get_GPIO() is guaranteed
+ *              to return a valid GPIO pin in this case.
+ *              False if invalid: board_get_GPIO() would trigger an assertion
+ *              failure
+ */
+bool board_has_GPIO(unsigned int ID);
+
+
+/**
+ * Get the ADC according to the given ID.
+ *
+ * Similar to board_get_GPIO(), but for ADC channels.
+ */
+enum CHIP_ADC_CHANNEL board_get_ADC(unsigned int ID);
+
+/**
+ * Test if the board has a valid ADC channel for the specified ADC ID.
+ *
+ * Similar to board_get_GPIO(), but for ADC channels.
+ */
+bool board_has_ADC(unsigned int ID);
 
 /**
  * Backup / restore nvic settings to / from a buffer

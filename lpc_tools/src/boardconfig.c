@@ -1,6 +1,7 @@
 #include "boardconfig.h"
 #include <stddef.h>
 #include "irq.h"
+#include <c_utils/assert.h>
 
 const BoardConfig *g_config = 0;
 
@@ -65,15 +66,44 @@ void board_NVIC_disable(const uint32_t priority_threshold)
 
 const GPIO *board_get_GPIO(unsigned int ID)
 {
+    assert(board_has_GPIO(ID));
+
+    return &(g_config->GPIO_configs[ID].IO);
+}
+
+bool board_has_GPIO(unsigned int ID)
+{
     if(!g_config) {
-        while(1); // fatal error
+        return false;
     }
 
-    size_t max_ID = g_config->GPIO_count;
+    const size_t max_ID = g_config->GPIO_count;
     if(ID >= max_ID) {
-        while(1); // fatal error
+        return false;
     }
-    return &(g_config->GPIO_configs[ID].IO);
+
+    return (g_config->GPIO_configs[ID].dir != GPIO_CFG_DIR_INVALID);
+}
+
+enum CHIP_ADC_CHANNEL board_get_ADC(unsigned int ID)
+{
+    assert(board_has_ADC(ID));
+
+    return g_config->ADC_configs[ID];
+}
+
+bool board_has_ADC(unsigned int ID)
+{
+    if(!g_config) {
+        return false;
+    }
+
+    const size_t max_ID = g_config->ADC_count;
+    if(ID >= max_ID) {
+        return false;
+    }
+
+    return (g_config->ADC_configs[ID] < ADC_CFG_INVALID);
 }
 
 static void board_setup_muxing(void)
@@ -87,6 +117,9 @@ static void board_setup_GPIO(void)
         GPIO IO = g_config->GPIO_configs[i].IO;
 
         switch(g_config->GPIO_configs[i].dir) {
+            case GPIO_CFG_DIR_INVALID:
+                break;
+
             case GPIO_CFG_DIR_OUTPUT_LOW: {
                 Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT,
                                           IO.port, IO.pin);
