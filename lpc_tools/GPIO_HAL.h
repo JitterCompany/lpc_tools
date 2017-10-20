@@ -18,6 +18,7 @@ enum GPIO_state {
 
 void GPIO_HAL_set_dir(const GPIO *gpio, enum GPIO_direction direction);
 void GPIO_HAL_set(const GPIO *gpio, enum GPIO_state state);
+void GPIO_HAL_toggle(const GPIO *gpio);
 enum GPIO_state GPIO_HAL_get(const GPIO *gpio);
 
 #endif

@@ -22,6 +22,11 @@ void GPIO_HAL_set(const GPIO *gpio, enum GPIO_state state)
             (state == HIGH));
 }
 
+void GPIO_HAL_toggle(const GPIO *gpio)
+{
+    Chip_GPIO_SetPinToggle(GPIO_PERIPHERAL, gpio->port, gpio->pin);
+}
+
 enum GPIO_state GPIO_HAL_get(const GPIO *gpio)
 {
     return Chip_GPIO_GetPinState(GPIO_PERIPHERAL, gpio->port, gpio->pin)
