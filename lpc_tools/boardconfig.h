@@ -38,12 +38,23 @@ typedef struct {
 } NVICConfig;
 
 
+#ifdef PINMUX_GRP_T
+    #define PinMuxConfig PINMUX_GRP_T
+#else
+    typedef struct {
+        uint8_t pingrp;
+        uint8_t pinnum;
+        uint16_t modefunc;
+    } PinMuxConfig;
+#endif
+
+
 
 typedef struct {
     const NVICConfig *nvic_configs;
     const size_t nvic_count;
 
-    const PINMUX_GRP_T *pinmux_configs;
+    const PinMuxConfig *pinmux_configs;
     const size_t pinmux_count;
 
     const GPIOConfig *GPIO_configs;

@@ -108,7 +108,23 @@ bool board_has_ADC(unsigned int ID)
 
 static void board_setup_muxing(void)
 {
+
+#if defined(MCU_PLATFORM_11uxx)
+
+	// Chips with IOCON peripheral (e.g. lpc11uxx)
+	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_IOCON);
+
+	for (size_t i=0; i<g_config->pinmux_count; i++) {
+		const PinMuxConfig cfg = g_config->pinmux_configs[i];
+		Chip_IOCON_PinMuxSet(LPC_IOCON, cfg.pingrp, cfg.pinnum, cfg.modefunc);
+	}
+
+#else
+
+	// Chips with SCU peripheral (e.g. lpc43xx)
     Chip_SCU_SetPinMuxing(g_config->pinmux_configs, g_config->pinmux_count);
+
+#endif
 }
 
 static void board_setup_GPIO(void)
@@ -121,23 +137,19 @@ static void board_setup_GPIO(void)
                 break;
 
             case GPIO_CFG_DIR_OUTPUT_LOW: {
-                Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT,
-                                          IO.port, IO.pin);
-                Chip_GPIO_SetPinState(LPC_GPIO_PORT,
-                                      IO.port, IO.pin, false);
+                GPIO_HAL_set_dir(&IO, GPIO_DIR_OUTPUT);
+                GPIO_HAL_set(&IO, LOW);
                 break;
             }
             case GPIO_CFG_DIR_OUTPUT_HIGH: {
-                Chip_GPIO_SetPinDIROutput(LPC_GPIO_PORT,
-                                          IO.port, IO.pin);
-                Chip_GPIO_SetPinState(LPC_GPIO_PORT,
-                                      IO.port, IO.pin, true);
+
+                GPIO_HAL_set_dir(&IO, GPIO_DIR_OUTPUT);
+                GPIO_HAL_set(&IO, HIGH);
                 break;
             }
             case GPIO_CFG_DIR_INPUT:
             default: {
-                Chip_GPIO_SetPinDIRInput(LPC_GPIO_PORT,
-                                         IO.port, IO.pin);
+                GPIO_HAL_set_dir(&IO, GPIO_DIR_INPUT);
                 break;
             }
         }
