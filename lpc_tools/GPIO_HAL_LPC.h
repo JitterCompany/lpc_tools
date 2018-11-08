@@ -7,7 +7,7 @@
 
 #if defined(MCU_PLATFORM_43xx_m0) || defined(MCU_PLATFORM_43xx_m4)
 #define GPIO_PERIPHERAL LPC_GPIO_PORT
-#elif defined(MCU_PLATFORM_11uxx)
+#elif defined(MCU_PLATFORM_11uxx) || defined(MCU_PLATFORM_lpc11xxx)
 #define GPIO_PERIPHERAL LPC_GPIO
 #else
 #error "Unsupported MCU platform!"

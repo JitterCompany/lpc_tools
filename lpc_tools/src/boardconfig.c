@@ -106,17 +106,23 @@ bool board_has_ADC(unsigned int ID)
     return (g_config->ADC_configs[ID] < ADC_CFG_INVALID);
 }
 
+
 static void board_setup_muxing(void)
 {
 
-#if defined(MCU_PLATFORM_11uxx)
+#if defined(MCU_PLATFORM_lpc11xxx)
 
 	// Chips with IOCON peripheral (e.g. lpc11uxx)
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_IOCON);
 
 	for (size_t i=0; i<g_config->pinmux_count; i++) {
 		const PinMuxConfig cfg = g_config->pinmux_configs[i];
+
+    #if defined(QUIRK_IOCON_11XX)
+		Chip_IOCON_PinMuxSet(LPC_IOCON, cfg.iocon_offset, cfg.modefunc);
+    #else
 		Chip_IOCON_PinMuxSet(LPC_IOCON, cfg.pingrp, cfg.pinnum, cfg.modefunc);
+    #endif
 	}
 
 #else

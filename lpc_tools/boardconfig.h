@@ -38,14 +38,30 @@ typedef struct {
 } NVICConfig;
 
 
-#ifdef PINMUX_GRP_T
+#if defined(MCU_PLATFORM_lpc43xx)
     #define PinMuxConfig PINMUX_GRP_T
+
+#elif defined(MCU_PLATFORM_lpc11xxx) || defined(MCU_PLATFORM_11uxx)
+
+    // Some variants have weird randomized IOCON register addresses.
+    // The chip library handles this by defining all port+pin combinations in
+    // the CHIP_IOCON_PIO_T enumeration.
+    #if !defined(CHIP_LPC11UXX) && !defined(CHIP_LPC11EXX) && !defined(CHIP_LPC11AXX)
+        #define QUIRK_IOCON_11XX
+        typedef struct {
+            CHIP_IOCON_PIO_T iocon_offset;
+            uint16_t modefunc;
+        } PinMuxConfig;
+    #else
+        typedef struct {
+            uint8_t pingrp;
+            uint8_t pinnum;
+            uint16_t modefunc;
+        } PinMuxConfig;
+    #endif
+
 #else
-    typedef struct {
-        uint8_t pingrp;
-        uint8_t pinnum;
-        uint16_t modefunc;
-    } PinMuxConfig;
+    #error "No supported MCU_PLATFORM_* found!"
 #endif
 
 
