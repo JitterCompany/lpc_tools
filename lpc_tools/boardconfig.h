@@ -38,7 +38,7 @@ typedef struct {
 } NVICConfig;
 
 
-#if defined(MCU_PLATFORM_lpc43xx)
+#if defined(MCU_PLATFORM_lpc43xx) || (defined(MCU_PLATFORM_43xx_m4) || defined(MCU_PLATFORM_43xx_m0))
     #define PinMuxConfig PINMUX_GRP_T
 
 #elif defined(MCU_PLATFORM_lpc11xxx) || defined(MCU_PLATFORM_11uxx)
